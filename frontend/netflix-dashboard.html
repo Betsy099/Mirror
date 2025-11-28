@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netflix Dashboard</title>
+  <style>
+    :root {
+      --primary-color: #e50914;
+      --dark-bg: #141414;
+      --light-bg: #f5f5f5;
+      --text-dark: #333;
+      --text-light: #fff;
+      --border-radius: 8px;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text-light);
+    }
+
+    /* Navigation */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: rgba(0, 0, 0, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary-color);
+    }
+
+    /* Main Content */
+    .dashboard-header {
+      padding: 2rem;
+      background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('https://source.unsplash.com/1600x900/?movie,theater') no-repeat center center/cover;
+    }
+
+    .dashboard-header h1 {
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+    }
+
+    .dashboard-header p {
+      font-size: 1.2rem;
+      max-width: 600px;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.8rem 1.5rem;
+      background-color: var(--primary-color);
+      color: var(--text-light);
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--transition);
+    }
+
+    .btn:hover {
+      background-color: #f40612;
+    }
+
+    /* Categories */
+    .categories {
+      padding: 2rem;
+    }
+
+    .category-title {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .category-title a {
+      color: #ccc;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .category-title a:hover {
+      text-decoration: underline;
+    }
+
+    /* Carousel */
+    .carousel-container {
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 3rem;
+    }
+
+    .carousel {
+      display: flex;
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      scrollbar-width: none; /* Firefox */
+      -ms-overflow-style: none; /* IE 10+ */
+    }
+
+    .carousel::-webkit-scrollbar {
+      display: none; /* Chrome Safari */
+    }
+
+    .movie-card {
+      flex: 0 0 auto;
+      width: 200px;
+      margin-right: 1rem;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      transition: var(--transition);
+      cursor: pointer;
+      position: relative;
+    }
+
+    .movie-card:hover {
+      transform: scale(1.05);
+    }
+
+    .movie-card img {
+      width: 100%;
+      height: 300px;
+      object-fit: cover;
+    }
+
+    .movie-info {
+      padding: 0.8rem;
+      background: rgba(0, 0, 0, 0.7);
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+    }
+
+    .movie-info h3 {
+      font-size: 1rem;
+      margin-bottom: 0.3rem;
+    }
+
+    .movie-info p {
+      font-size: 0.8rem;
+      color: #ccc;
+    }
+
+    /* Controls */
+    .carousel-control {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      background: rgba(0, 0, 0, 0.5);
+      color: white;
+      border: none;
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      cursor: pointer;
+      z-index: 10;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .carousel-control.prev {
+      left: 10px;
+    }
+
+    .carousel-control.next {
+      right: 10px;
+    }
+
+    /* Watchlist */
+    .watchlist-section {
+      padding: 0 2rem 2rem;
+    }
+
+    /* Footer */
+    footer {
+      background-color: #000;
+      padding: 2rem;
+      text-align: center;
+    }
+
+    footer p {
+      color: #888;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .dashboard-header {
+        padding: 1.5rem;
+      }
+
+      .dashboard-header h1 {
+        font-size: 2rem;
+      }
+
+      .categories {
+        padding: 1.5rem;
+      }
+
+      .movie-card {
+        width: 150px;
+      }
+
+      .movie-card img {
+        height: 225px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">StreamShop</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/login">Login</a>
+      <a href="/netflix-dashboard" class="active">Netflix Dashboard</a>
+      <a href="/amazon-search">Amazon Search</a>
+    </div>
+  </nav>
+
+  <header class="dashboard-header">
+    <h1>Welcome to Netflix</h1>
+    <p>Discover your next favorite movie or TV show from our vast collection.</p>
+    <button class="btn">Watch Now</button>
+  </header>
+
+  <section class="categories">
+    <div class="category-title">
+      <h2>Trending Now</h2>
+      <a href="#">View All</a>
+    </div>
+    <div class="carousel-container">
+      <button class="carousel-control prev">&#10094;</button>
+      <div class="carousel" id="trending-carousel">
+        <!-- Movie cards will be populated by JavaScript -->
+      </div>
+      <button class="carousel-control next">&#10095;</button>
+    </div>
+
+    <div class="category-title">
+      <h2>Top Picks For You</h2>
+      <a href="#">View All</a>
+    </div>
+    <div class="carousel-container">
+      <button class="carousel-control prev">&#10094;</button>
+      <div class="carousel" id="picks-carousel">
+        <!-- Movie cards will be populated by JavaScript -->
+      </div>
+      <button class="carousel-control next">&#10095;</button>
+    </div>
+
+    <div class="category-title">
+      <h2>New Releases</h2>
+      <a href="#">View All</a>
+    </div>
+    <div class="carousel-container">
+      <button class="carousel-control prev">&#10094;</button>
+      <div class="carousel" id="new-releases-carousel">
+        <!-- Movie cards will be populated by JavaScript -->
+      </div>
+      <button class="carousel-control next">&#10095;</button>
+    </div>
+  </section>
+
+  <section class="watchlist-section">
+    <div class="category-title">
+      <h2>My Watchlist</h2>
+      <a href="#">View All</a>
+    </div>
+    <div class="carousel-container">
+      <button class="carousel-control prev">&#10094;</button>
+      <div class="carousel" id="watchlist-carousel">
+        <!-- Watchlist items will be populated by JavaScript -->
+      </div>
+      <button class="carousel-control next">&#10095;</button>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2023 StreamShop. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Sample movie data
+    const movies = [
+      { id: 1, title: "Stranger Things", year: "2016", genre: "Sci-Fi", image: "https://source.unsplash.com/200x300/?stranger,things" },
+      { id: 2, title: "The Crown", year: "2016", genre: "Drama", image: "https://source.unsplash.com/200x300/?crown,royal" },
+      { id: 3, title: "Money Heist", year: "2017", genre: "Action", image: "https://source.unsplash.com/200x300/?money,heist" },
+      { id: 4, title: "Breaking Bad", year: "2008", genre: "Crime", image: "https://source.unsplash.com/200x300/?breaking,bad" },
+      { id: 5, title: "Black Mirror", year: "2011", genre: "Sci-Fi", image: "https://source.unsplash.com/200x300/?black,mirror" },
+      { id: 6, title: "Narcos", year: "2015", genre: "Crime", image: "https://source.unsplash.com/200x300/?narcos,drug" },
+      { id: 7, title: "The Witcher", year: "2019", genre: "Fantasy", image: "https://source.unsplash.com/200x300/?witcher,fantasy" },
+      { id: 8, title: "Ozark", year: "2017", genre: "Crime", image: "https://source.unsplash.com/200x300/?ozark,money" }
+    ];
+
+    // Function to create movie card
+    function createMovieCard(movie) {
+      return `
+        <div class="movie-card" data-id="${movie.id}">
+          <img src="${movie.image}" alt="${movie.title}">
+          <div class="movie-info">
+            <h3>${movie.title}</h3>
+            <p>${movie.year} • ${movie.genre}</p>
+          </div>
+        </div>
+      `;
+    }
+
+    // Populate carousels
+    function populateCarousel(carouselId, moviesArray) {
+      const carousel = document.getElementById(carouselId);
+      carousel.innerHTML = moviesArray.map(movie => createMovieCard(movie)).join('');
+    }
+
+    // Initialize carousels
+    populateCarousel('trending-carousel', movies);
+    populateCarousel('picks-carousel', [...movies].reverse());
+    populateCarousel('new-releases-carousel', movies.slice(0, 5));
+    populateCarousel('watchlist-carousel', movies.slice(2, 6));
+
+    // Carousel navigation
+    document.querySelectorAll('.carousel-container').forEach(container => {
+      const carousel = container.querySelector('.carousel');
+      const prevBtn = container.querySelector('.prev');
+      const nextBtn = container.querySelector('.next');
+
+      prevBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: -carousel.offsetWidth, behavior: 'smooth' });
+      });
+
+      nextBtn.addEventListener('click', () => {
+        carousel.scrollBy({ left: carousel.offsetWidth, behavior: 'smooth' });
+      });
+    });
+
+    // Add click event to movie cards
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('.movie-card')) {
+        const movieId = e.target.closest('.movie-card').dataset.id;
+        // In a real app, this would navigate to the movie details page
+        console.log(`Navigate to movie details page for ID: ${movieId}`);
+      }
+    });
+  </script>
+</body>
+</html>
