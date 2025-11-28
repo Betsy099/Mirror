@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Movie Details</title>
+  <style>
+    :root {
+      --primary-color: #e50914;
+      --dark-bg: #141414;
+      --light-bg: #f5f5f5;
+      --text-dark: #333;
+      --text-light: #fff;
+      --border-radius: 8px;
+      --transition: all 0.3s ease;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    body {
+      background-color: var(--dark-bg);
+      color: var(--text-light);
+    }
+
+    /* Navigation */
+    nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      background-color: rgba(0, 0, 0, 0.8);
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+    }
+
+    .logo {
+      font-size: 1.8rem;
+      font-weight: bold;
+      color: var(--primary-color);
+    }
+
+    .nav-links {
+      display: flex;
+      gap: 1.5rem;
+    }
+
+    .nav-links a {
+      color: var(--text-light);
+      text-decoration: none;
+      font-weight: 500;
+      transition: var(--transition);
+    }
+
+    .nav-links a:hover,
+    .nav-links a.active {
+      color: var(--primary-color);
+    }
+
+    /* Main Content */
+    .movie-detail-container {
+      padding: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .movie-header {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    .movie-poster {
+      flex: 0 0 300px;
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+    }
+
+    .movie-poster img {
+      width: 100%;
+      display: block;
+    }
+
+    .movie-info {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .movie-info h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+    }
+
+    .movie-meta {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      color: #ccc;
+    }
+
+    .movie-meta span {
+      display: flex;
+      align-items: center;
+    }
+
+    .movie-meta span::before {
+      content: "•";
+      margin: 0 0.5rem;
+    }
+
+    .movie-meta span:first-child::before {
+      content: "";
+      margin: 0;
+    }
+
+    .movie-actions {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.8rem 1.5rem;
+      border: none;
+      border-radius: var(--border-radius);
+      cursor: pointer;
+      font-size: 1rem;
+      transition: var(--transition);
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .btn-primary {
+      background-color: var(--primary-color);
+      color: var(--text-light);
+    }
+
+    .btn-primary:hover {
+      background-color: #f40612;
+    }
+
+    .btn-secondary {
+      background-color: rgba(255, 255, 255, 0.1);
+      color: var(--text-light);
+    }
+
+    .btn-secondary:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .movie-description {
+      margin-bottom: 2rem;
+      line-height: 1.6;
+      color: #ddd;
+    }
+
+    .movie-cast {
+      margin-bottom: 2rem;
+    }
+
+    .movie-cast h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .cast-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .cast-member {
+      width: 100px;
+      text-align: center;
+    }
+
+    .cast-member img {
+      width: 100%;
+      border-radius: 50%;
+      margin-bottom: 0.5rem;
+    }
+
+    .cast-member p {
+      font-size: 0.9rem;
+    }
+
+    .related-movies {
+      margin-top: 3rem;
+    }
+
+    .related-movies h2 {
+      margin-bottom: 1rem;
+      font-size: 1.5rem;
+    }
+
+    .related-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 1.5rem;
+    }
+
+    .related-movie {
+      border-radius: var(--border-radius);
+      overflow: hidden;
+      transition: var(--transition);
+      cursor: pointer;
+    }
+
+    .related-movie:hover {
+      transform: scale(1.05);
+    }
+
+    .related-movie img {
+      width: 100%;
+      display: block;
+    }
+
+    .related-movie h3 {
+      padding: 0.5rem;
+      font-size: 0.9rem;
+      text-align: center;
+      background: rgba(0, 0, 0, 0.7);
+    }
+
+    /* Footer */
+    footer {
+      background-color: #000;
+      padding: 2rem;
+      text-align: center;
+      margin-top: 3rem;
+    }
+
+    footer p {
+      color: #888;
+    }
+
+    @media (max-width: 768px) {
+      .nav-links {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .movie-header {
+        flex-direction: column;
+      }
+
+      .movie-poster {
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: 300px;
+        margin: 0 auto;
+      }
+
+      .movie-info h1 {
+        font-size: 2rem;
+        text-align: center;
+      }
+
+      .movie-actions {
+        justify-content: center;
+      }
+
+      .movie-meta {
+        justify-content: center;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    <div class="logo">StreamShop</div>
+    <div class="nav-links">
+      <a href="/">Home</a>
+      <a href="/login">Login</a>
+      <a href="/netflix-dashboard">Netflix Dashboard</a>
+      <a href="/amazon-search">Amazon Search</a>
+      <a href="/movie-details" class="active">Movie Details</a>
+    </div>
+  </nav>
+
+  <main class="movie-detail-container">
+    <div class="movie-header">
+      <div class="movie-poster">
+        <img src="https://source.unsplash.com/300x450/?movie,poster" alt="Movie Poster">
+      </div>
+      <div class="movie-info">
+        <h1>Stranger Things</h1>
+        <div class="movie-meta">
+          <span>2016</span>
+          <span>TV-14</span>
+          <span>3 Seasons</span>
+          <span>Sci-Fi & Horror</span>
+        </div>
+        <div class="movie-actions">
+          <button class="btn btn-primary">
+            <i class="play-icon">▶</i> Play
+          </button>
+          <button class="btn btn-secondary">
+            <i class="add-icon">+</i> My List
+          </button>
+        </div>
+        <p class="movie-description">
+          When a young boy vanishes, a small town uncovers a mystery involving secret experiments, terrifying supernatural forces and one strange little girl. As friends, family and local police search for answers, they are drawn into an extraordinary mystery involving top-secret government laboratories, unnatural phenomena and one very strange little girl.
+        </p>
+      </div>
+    </div>
+
+    <section class="movie-cast">
+      <h2>Cast</h2>
+      <div class="cast-list">
+        <div class="cast-member">
+          <img src="https://source.unsplash.com/100x100/?person,actor" alt="Actor">
+          <p>Millie Bobby Brown</p>
+        </div>
+        <div class="cast-member">
+          <img src="https://source.unsplash.com/100x100/?person,actress" alt="Actor">
+          <p>Finn Wolfhard</p>
+        </div>
+        <div class="cast-member">
+          <img src="https://source.unsplash.com/100x100/?person,man" alt="Actor">
+          <p>David Harbour</p>
+        </div>
+        <div class="cast-member">
+          <img src="https://source.unsplash.com/100x100/?person,woman" alt="Actor">
+          <p>Winona Ryder</p>
+        </div>
+        <div class="cast-member">
+          <img src="https://source.unsplash.com/100x100/?person,girl" alt="Actor">
+          <p>Natalia Dyer</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="related-movies">
+      <h2>You May Also Like</h2>
+      <div class="related-grid">
+        <div class="related-movie">
+          <img src="https://source.unsplash.com/150x225/?horror,show" alt="Related Movie">
+          <h3>Dark</h3>
+        </div>
+        <div class="related-movie">
+          <img src="https://source.unsplash.com/150x225/?scifi,series" alt="Related Movie">
+          <h3>Black Mirror</h3>
+        </div>
+        <div class="related-movie">
+          <img src="https://source.unsplash.com/150x225/?mystery,thriller" alt="Related Movie">
+          <h3>The OA</h3>
+        </div>
+        <div class="related-movie">
+          <img src="https://source.unsplash.com/150x225/?supernatural,drama" alt="Related Movie">
+          <h3>Locke & Key</h3>
+        </div>
+        <div class="related-movie">
+          <img src="https://source.unsplash.com/150x225/?fantasy,adventure" alt="Related Movie">
+          <h3>The Umbrella Academy</h3>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 StreamShop. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Add to watchlist functionality
+    document.querySelector('.btn-secondary').addEventListener('click', function() {
+      const icon = this.querySelector('.add-icon');
+      if (icon.textContent === '+') {
+        icon.textContent = '✓';
+        this.innerHTML = this.innerHTML.replace('My List', 'Added');
+      } else {
+        icon.textContent = '+';
+        this.innerHTML = this.innerHTML.replace('Added', 'My List');
+      }
+    });
+
+    // Play button functionality
+    document.querySelector('.btn-primary').addEventListener('click', function() {
+      alert('Playing Stranger Things trailer...');
+    });
+
+    // Related movie click handler
+    document.querySelectorAll('.related-movie').forEach(movie => {
+      movie.addEventListener('click', function() {
+        const title = this.querySelector('h3').textContent;
+        alert(`Navigating to details for: ${title}`);
+      });
+    });
+  </script>
+</body>
+</html>
